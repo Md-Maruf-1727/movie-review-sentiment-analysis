@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analyzer</title>
+    <style>
+        /* CSS: Styling the interface */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .app-container {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        h2 { color: #333; margin-bottom: 20px; }
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: none;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        textarea:focus { border-color: #007bff; outline: none; }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+        button:hover { background-color: #0056b3; }
+        #resultArea {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            border: 1px dashed #ccc;
+            min-height: 50px;
+            display: none; /* Hidden until data arrives */
+            color: #333;
+            text-align: left;
+        }
+        .loading { color: #007bff; font-style: italic; display: none; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h2>Sentiment Analyzer</h2>
+    <form id="sentimentForm" method="POST" action="/predict">
+        <textarea id="textInput" name="review" placeholder="Enter movie review here..."></textarea>
+        <button type="submit" id="submitBtn">Predict Sentiment</button>
+    </form>
+    
+    <div id="loadingText" class="loading">Loading...</div>
+    <div id="resultArea"></div>
+</div>
+
+<script>
+    const form = document.getElementById('sentimentForm');
+    const btn = document.getElementById('submitBtn');
+    const loader = document.getElementById('loadingText');
+    const resultArea = document.getElementById('resultArea');
+
+    form.onsubmit = function(e) {
+        // Prevent default form submit to allow custom handling
+        e.preventDefault();
+
+        // Check all inputs and textareas
+        const inputs = form.querySelectorAll('input, textarea');
+        let allFilled = true;
+
+        inputs.forEach(input => {
+            if(input.value.trim() === "") {
+                allFilled = false;
+            }
+        });
+
+        if(!allFilled) {
+            alert("Please fill all fields!");
+            return;
+        }
+
+        // Show loading state
+        btn.style.display = 'none';
+        loader.style.display = 'block';
+        resultArea.style.display = 'none';
+
+        // Simulate sending data to server (AJAX style)
+        // Replace this with actual fetch to server endpoint
+        setTimeout(() => {
+            // Simulated response
+            const simulatedSentiment = Math.random() > 0.5 ? "Positive" : "Negative";
+            resultArea.innerHTML = `<strong>Predicted Sentiment:</strong> ${simulatedSentiment}`;
+            resultArea.style.display = 'block';
+            loader.style.display = 'none';
+            btn.style.display = 'block';
+        }, 1500); // 1.5 seconds loading simulation
+    };
+</script>
+
+</body>
+</html>
