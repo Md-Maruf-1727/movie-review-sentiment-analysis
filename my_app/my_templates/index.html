@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentiment Analyzer</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7f6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .app-container {
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 450px;
+        text-align: center;
+    }
+    h2 { color: #333; margin-bottom: 20px; }
+    textarea {
+        width: 100%;
+        height: 120px;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        resize: none;
+        box-sizing: border-box;
+        margin-bottom: 15px;
+    }
+    textarea:focus { border-color: #007bff; outline: none; }
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        width: 100%;
+        transition: background 0.3s ease;
+    }
+    button:hover { background-color: #0056b3; }
+    #resultArea {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        border: 1px dashed #ccc;
+        min-height: 50px;
+        color: #333;
+        text-align: left;
+        display: none;
+    }
+    .loading { color: #007bff; font-style: italic; display: none; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+    <h2>Sentiment Analyzer</h2>
+    
+    <!-- Form -->
+    <form id="sentimentForm">
+        <textarea id="textInput" name="review" placeholder="Enter movie review here..." required></textarea>
+        <button type="submit">Predict Sentiment</button>
+    </form>
+
+    <div id="loadingText" class="loading">Loading...</div>
+    <div id="resultArea">
+        {% if prediction %}
+            <strong>Predicted Sentiment:</strong> {{ prediction }}
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
+const form = document.getElementById('sentimentForm');
+const textInput = document.getElementById('textInput');
+const loader = document.getElementById('loadingText');
+const resultArea = document.getElementById('resultArea');
+
+form.onsubmit = function(e) {
+    e.preventDefault();
+
+    const review = textInput.value.trim();
+    if (!review) {
+        alert("Please enter a review!");
+        return;
+    }
+
+    // Show loading
+    loader.style.display = 'block';
+    resultArea.style.display = 'none';
+
+    // AJAX POST to Flask
+    fetch('/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'review=' + encodeURIComponent(review)
+    })
+    .then(response => response.text())
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newResult = doc.getElementById('resultArea');
+        if(newResult) {
+            resultArea.innerHTML = newResult.innerHTML;
+            resultArea.style.display = 'block';
+        }
+        loader.style.display = 'none';
+    });
+};
+</script>
+
+</body>
+</html>
