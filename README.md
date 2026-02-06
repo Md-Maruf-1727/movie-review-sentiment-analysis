@@ -68,7 +68,7 @@ Movie review sentiment analysis/
 1. **Clone the repository**
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Md-Maruf-1727/movie-review-sentiment-analysis.git
 cd "Movie review sentiment analysis"
 ````
 
@@ -167,6 +167,5 @@ GitHub: [github.com/Md-Maruf-1727](https://github.com/Md-Maruf-1727)
 
 ```
 
----
 
 
